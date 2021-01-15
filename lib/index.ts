@@ -89,7 +89,7 @@ async function setupSocket() {
 		}
 	}
 
-	ws.onclose = () => {
+	ws.onerror = ws.onclose = () => {
 		window._notify_push_ws = null;
 
 		setTimeout(() => {
