@@ -12,6 +12,21 @@ declare global {
 }
 
 /**
+ * Get the list of supported notification types as reported by the server
+ *
+ * @return string[]
+ */
+export function getSupportedTypes(): string[] {
+	const capabilities = getCapabilities() as Capabilities;
+
+	if (capabilities.notify_push) {
+		return capabilities.notify_push.type
+	} else {
+		return [];
+	}
+}
+
+/**
  * Register a listener for notify_push events
  *
  * @param name name of the event
@@ -51,6 +66,7 @@ function setupGlobals() {
 
 interface Capabilities {
 	notify_push?: {
+		type: string[],
 		endpoints: {
 			pre_auth: string,
 			websocket: string,
