@@ -1,4 +1,4 @@
-# @nextcloud/event-bus
+# @nextcloud/notify_push
 
 [![npm](https://img.shields.io/npm/v/@nextcloud/event-bus.svg)](https://www.npmjs.com/package/@nextcloud/notify_push)
 
