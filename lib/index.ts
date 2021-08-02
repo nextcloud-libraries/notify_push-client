@@ -41,7 +41,11 @@ export function listen(name: string, handler: (string) => void): boolean {
 	}
 
 	window._notify_push_listeners[name].push(handler);
-	setupSocket();
+	if (window._notify_push_ws !== null && typeof window._notify_push_ws === "object") {
+		window._notify_push_ws.send('listen ' + name);
+	} else {
+		setupSocket();
+	}
 
 	return window._notify_push_available;
 }
@@ -96,6 +100,10 @@ async function setupSocket() {
 		if (typeof window._notify_push_ws === "object" && window._notify_push_ws) {
 			window._notify_push_ws.send('')
 			window._notify_push_ws.send(response.data)
+
+			for (let name in window._notify_push_listeners) {
+				window._notify_push_ws.send('listen ' + name);
+			}
 		}
 	}
 
