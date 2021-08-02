@@ -1,10 +1,10 @@
-import { getCapabilities } from '@nextcloud/capabilities';
+import {getCapabilities} from '@nextcloud/capabilities';
 import axios from '@nextcloud/axios'
-import { subscribe } from '@nextcloud/event-bus'
+import {subscribe} from '@nextcloud/event-bus'
 
 declare global {
 	interface Window {
-		_notify_push_listeners: { [event: string] : ((string) => void)[] },
+		_notify_push_listeners: { [event: string]: ((string, any) => void)[] },
 		_notify_push_ws: WebSocket | null | true,
 		_notify_push_online: boolean,
 		_notify_push_available: boolean,
@@ -33,7 +33,7 @@ export function getSupportedTypes(): string[] {
  * @param handler callback invoked for every matching event pushed
  * @return boolean whether or not push is setup correctly
  */
-export function listen(name: string, handler: (string) => void): boolean {
+export function listen(name: string, handler: (string, any) => void): boolean {
 	setupGlobals();
 
 	if (!window._notify_push_listeners[name]) {
@@ -108,11 +108,15 @@ async function setupSocket() {
 	}
 
 	window._notify_push_ws.onmessage = message => {
-		const event = message.data;
+		const i = message.data.indexOf(' ');
+		let [event, body] = i > 0 ? [message.data.slice(0, i), message.data.slice(i + 1)] : [message.data, null];
+		if (body) {
+			body = JSON.parse(body);
+		}
 
 		if (window._notify_push_listeners[event]) {
 			for (let cb of window._notify_push_listeners[event]) {
-				cb(event);
+				cb(event, body);
 			}
 		}
 	}
