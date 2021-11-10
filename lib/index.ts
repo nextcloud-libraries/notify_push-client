@@ -8,6 +8,7 @@ declare global {
 		_notify_push_ws: WebSocket | null | true,
 		_notify_push_online: boolean,
 		_notify_push_available: boolean,
+		_notify_push_error_count: number,
 	}
 }
 
@@ -56,12 +57,14 @@ function setupGlobals() {
 		window._notify_push_ws = null;
 		window._notify_push_online = true;
 		window._notify_push_available = false;
+		window._notify_push_error_count = 0;
 
 		subscribe('networkOffline', () => {
 			window._notify_push_online = false;
 			window._notify_push_ws = null;
 		});
 		subscribe('networkOnline', () => {
+			window._notify_push_error_count = 0;
 			window._notify_push_online = true;
 			setupSocket();
 		});
@@ -108,27 +111,32 @@ async function setupSocket() {
 	}
 
 	window._notify_push_ws.onmessage = message => {
-		const i = message.data.indexOf(' ');
-		let [event, body] = i > 0 ? [message.data.slice(0, i), message.data.slice(i + 1)] : [message.data, null];
-		if (body) {
-			body = JSON.parse(body);
-		}
+		if (message.data === "authenticated") {
+			window._notify_push_error_count = 0;
+		} else {
+			const i = message.data.indexOf(' ');
+			let [event, body] = i > 0 ? [message.data.slice(0, i), message.data.slice(i + 1)] : [message.data, null];
+			if (body) {
+				body = JSON.parse(body);
+			}
 
-		if (window._notify_push_listeners[event]) {
-			for (let cb of window._notify_push_listeners[event]) {
-				cb(event, body);
+			if (window._notify_push_listeners[event]) {
+				for (let cb of window._notify_push_listeners[event]) {
+					cb(event, body);
+				}
 			}
 		}
 	}
 
 	window._notify_push_ws.onerror = window._notify_push_ws.onclose = () => {
 		window._notify_push_ws = null;
+		window._notify_push_error_count += 1;
 
 		setTimeout(() => {
 			if (window._notify_push_online) {
 				setupSocket();
 			}
-		}, 1000);
+		}, 1000 * window._notify_push_error_count);
 	}
 
 	return true;
