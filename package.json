@@ -18,12 +18,12 @@
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
+    "@nextcloud/axios": "^1.6.0",
+    "@nextcloud/event-bus": "^1.2.0",
     "@nextcloud/capabilities": "^1.0.2"
   },
   "devDependencies": {
-    "@nextcloud/axios": "^1.6.0",
     "@nextcloud/browserslist-config": "^1.0.0",
-    "@nextcloud/event-bus": "^1.2.0",
     "jest": "^26.0.1",
     "typedoc": "^0.17.3",
     "typescript": "^3.8.3"
