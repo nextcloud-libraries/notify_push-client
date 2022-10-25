@@ -9,6 +9,10 @@
   "keywords": [
     "nextcloud"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/icewind1991/notify_push-client.git"
+  },
   "scripts": {
     "build": "tsc",
     "build:doc": "typedoc --out dist/doc lib && touch dist/doc/.nojekyll",
