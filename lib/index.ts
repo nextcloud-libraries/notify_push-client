@@ -1,5 +1,6 @@
 import {getCapabilities} from '@nextcloud/capabilities';
-import axios from '@nextcloud/axios'
+// @ts-ignore, work around https://github.com/nextcloud-libraries/nextcloud-axios/issues/638
+import {post} from '@nextcloud/axios'
 import {subscribe} from '@nextcloud/event-bus'
 
 declare global {
@@ -96,7 +97,7 @@ async function setupSocket() {
 	}
 	window._notify_push_available = true;
 
-	const response = await axios.post(capabilities.notify_push.endpoints.pre_auth);
+	const response = await post(capabilities.notify_push.endpoints.pre_auth);
 
 	window._notify_push_ws = new WebSocket(capabilities.notify_push.endpoints.websocket)
 	window._notify_push_ws.onopen = () => {
