@@ -6,8 +6,8 @@ A javascript client for notify_push events for Nextcloud apps.
 
 ## Installation
 
-```
-npm i -S @nextcloud/notify_push
+```sh
+npm i @nextcloud/notify_push
 ```
 
 ## Usage
@@ -15,7 +15,18 @@ npm i -S @nextcloud/notify_push
 ```js
 import { listen } from '@nextcloud/notify_push'
 
+// Using pre_auth request for web apps
 listen('notify_file', () => {
 	console.log('A File has been changed')
+})
+
+// Using credentials for clients
+listen('notify_file', () => {
+  console.log('A File has been changed')
+}, {
+  credentials: {
+    username: 'alice',
+    password: 'app-password',
+  },
 })
 ```

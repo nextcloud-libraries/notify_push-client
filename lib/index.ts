@@ -13,6 +13,13 @@ declare global {
 	}
 }
 
+type NotifyPushOptions = {
+	credentials?: {
+		username: string,
+		password: string,
+	}
+}
+
 /**
  * Get the list of supported notification types as reported by the server
  *
@@ -33,10 +40,14 @@ export function getSupportedTypes(): string[] {
  *
  * @param name name of the event
  * @param handler callback invoked for every matching event pushed
- * @return boolean whether or not push is setup correctly
+ * @param [options]
+ * @param [options.credentials] optional credentials used instead of the pre_auth request
+ * @param [options.credentials.username] username
+ * @param [options.credentials.password] app password
+ * @return boolean whether push is set up correctly
  */
-export function listen(name: string, handler: (string, any) => void): boolean {
-	setupGlobals();
+export function listen(name: string, handler: (string, any) => void, options: NotifyPushOptions = {}): boolean {
+	setupGlobals(options);
 
 	if (!window._notify_push_listeners[name]) {
 		window._notify_push_listeners[name] = []
@@ -46,13 +57,13 @@ export function listen(name: string, handler: (string, any) => void): boolean {
 	if (window._notify_push_ws !== null && typeof window._notify_push_ws === "object") {
 		window._notify_push_ws.send('listen ' + name);
 	} else {
-		setupSocket();
+		setupSocket(options);
 	}
 
 	return window._notify_push_available;
 }
 
-function setupGlobals() {
+function setupGlobals(options: NotifyPushOptions = {}) {
 	if (typeof window._notify_push_listeners === "undefined") {
 		window._notify_push_listeners = {};
 		window._notify_push_ws = null;
@@ -67,7 +78,7 @@ function setupGlobals() {
 		subscribe('networkOnline', () => {
 			window._notify_push_error_count = 0;
 			window._notify_push_online = true;
-			setupSocket();
+			setupSocket(options);
 		});
 	}
 }
@@ -82,8 +93,7 @@ interface Capabilities {
 	}
 }
 
-
-async function setupSocket() {
+async function setupSocket(options: NotifyPushOptions = {}) {
 	if (window._notify_push_ws) {
 		return true;
 	}
@@ -97,13 +107,22 @@ async function setupSocket() {
 	}
 	window._notify_push_available = true;
 
-	const response = await post(capabilities.notify_push.endpoints.pre_auth);
+	let preAuth: string
+	if (!options.credentials) {
+		const response = await post(capabilities.notify_push.endpoints.pre_auth)
+		preAuth = response.data
+	}
 
 	window._notify_push_ws = new WebSocket(capabilities.notify_push.endpoints.websocket)
 	window._notify_push_ws.onopen = () => {
 		if (typeof window._notify_push_ws === "object" && window._notify_push_ws) {
-			window._notify_push_ws.send('')
-			window._notify_push_ws.send(response.data)
+			if (preAuth) {
+				window._notify_push_ws.send('')
+				window._notify_push_ws.send(preAuth)
+			} else if (options.credentials) {
+				window._notify_push_ws.send(options.credentials.username)
+				window._notify_push_ws.send(options.credentials.password)
+			}
 
 			for (let name in window._notify_push_listeners) {
 				window._notify_push_ws.send('listen ' + name);
@@ -135,7 +154,7 @@ async function setupSocket() {
 
 		setTimeout(() => {
 			if (window._notify_push_online) {
-				setupSocket();
+				setupSocket(options);
 			}
 		}, 1000 * window._notify_push_error_count);
 	}
