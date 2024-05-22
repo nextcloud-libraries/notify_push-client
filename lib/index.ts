@@ -1,6 +1,5 @@
 import {getCapabilities} from '@nextcloud/capabilities';
-// @ts-ignore, work around https://github.com/nextcloud-libraries/nextcloud-axios/issues/638
-import {post} from '@nextcloud/axios'
+import axios from '@nextcloud/axios'
 import {subscribe} from '@nextcloud/event-bus'
 
 declare global {
@@ -109,7 +108,7 @@ async function setupSocket(options: NotifyPushOptions = {}) {
 
 	let preAuth: string
 	if (!options.credentials) {
-		const response = await post(capabilities.notify_push.endpoints.pre_auth)
+		const response = await axios.post(capabilities.notify_push.endpoints.pre_auth)
 		preAuth = response.data
 	}
 
