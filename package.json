@@ -22,7 +22,7 @@
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
-    "@nextcloud/axios": "^2.4.0",
+    "@nextcloud/axios": "^2.5.0",
     "@nextcloud/capabilities": "^1.2.0",
     "@nextcloud/event-bus": "^3.3.0"
   },
