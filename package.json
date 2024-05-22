@@ -30,7 +30,7 @@
     "@nextcloud/browserslist-config": "^3.0.1",
     "jest": "^29.7.0",
     "typedoc": "^0.25.13",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
