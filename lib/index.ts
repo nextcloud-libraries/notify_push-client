@@ -57,7 +57,7 @@ export function listen(name: string, handler: (string, any) => void, options: No
 	}
 
 	window._notify_push_listeners[name].push(handler);
-	if (window._notify_push_ws !== null && typeof window._notify_push_ws === "object") {
+	if (window._notify_push_ws !== null && typeof window._notify_push_ws === "object" && window._notify_push_ws.readyState === WebSocket.OPEN) {
 		window._notify_push_ws.send('listen ' + name);
 	} else {
 		setupSocket(options);
