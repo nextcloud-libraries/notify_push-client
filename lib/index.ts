@@ -13,6 +13,7 @@ declare global {
 		_notify_push_online: boolean,
 		_notify_push_available: boolean,
 		_notify_push_error_count: number,
+		_notify_push_ready: boolean,
 	}
 }
 
@@ -57,7 +58,7 @@ export function listen(name: string, handler: (string, any) => void, options: No
 	}
 
 	window._notify_push_listeners[name].push(handler);
-	if (window._notify_push_ws !== null && typeof window._notify_push_ws === "object" && window._notify_push_ws.readyState === WebSocket.OPEN) {
+	if (window._notify_push_ws !== null && typeof window._notify_push_ws === "object" && window._notify_push_ready) {
 		window._notify_push_ws.send('listen ' + name);
 	} else {
 		setupSocket(options);
@@ -73,10 +74,12 @@ function setupGlobals(options: NotifyPushOptions = {}) {
 		window._notify_push_online = true;
 		window._notify_push_available = false;
 		window._notify_push_error_count = 0;
+		window._notify_push_ready = false;
 
 		subscribe('networkOffline', () => {
 			window._notify_push_online = false;
 			window._notify_push_ws = null;
+			window._notify_push_ready = false;
 		});
 		subscribe('networkOnline', () => {
 			window._notify_push_error_count = 0;
@@ -127,6 +130,8 @@ async function setupSocket(options: NotifyPushOptions = {}) {
 				window._notify_push_ws.send(options.credentials.password)
 			}
 
+			window._notify_push_ready = true;
+
 			for (let name in window._notify_push_listeners) {
 				window._notify_push_ws.send('listen ' + name);
 			}
@@ -154,6 +159,7 @@ async function setupSocket(options: NotifyPushOptions = {}) {
 	window._notify_push_ws.onerror = window._notify_push_ws.onclose = () => {
 		window._notify_push_ws = null;
 		window._notify_push_error_count += 1;
+		window._notify_push_ready = false;
 
 		setTimeout(() => {
 			if (window._notify_push_online) {
