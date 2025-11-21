@@ -4,7 +4,7 @@
   "description": "A javascript client for notify_push events",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "author": "",
+  "author": "Nextcloud GmbH and Nextcloud contributors",
   "license": "AGPL-3.0-or-later",
   "keywords": [
     "nextcloud"
