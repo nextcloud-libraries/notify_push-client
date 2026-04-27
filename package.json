@@ -22,9 +22,7 @@
     "build": "tsc",
     "build:doc": "typedoc --out dist/doc lib && touch dist/doc/.nojekyll",
     "check-types": "tsc",
-    "dev": "babel ./lib --out-dir dist --extensions '.ts,.tsx' --watch",
-    "test": "jest",
-    "test:watch": "jest --watchAll"
+    "dev": "babel ./lib --out-dir dist --extensions '.ts,.tsx' --watch"
   },
   "dependencies": {
     "@nextcloud/axios": "^2.6.0",
@@ -33,7 +31,6 @@
   },
   "devDependencies": {
     "@nextcloud/browserslist-config": "^3.1.2",
-    "jest": "^30.2.0",
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
   },
