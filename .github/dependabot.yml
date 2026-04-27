@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
 version: 2
 updates:
 - package-ecosystem: npm
@@ -9,5 +10,8 @@ updates:
     day: saturday
     time: "03:00"
     timezone: Europe/Paris
+  cooldown:
+    default-days: 5
+    semver-major-days: 8
   open-pull-requests-limit: 10
   versioning-strategy: increase
