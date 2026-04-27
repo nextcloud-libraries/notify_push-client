@@ -39,5 +39,15 @@
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
-  ]
+  ],
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "^11.3"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^24"
+    }
+  }
 }
