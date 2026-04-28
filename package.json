@@ -1,6 +1,6 @@
 {
   "name": "@nextcloud/notify_push",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "A javascript client for notify_push events",
   "type": "module",
   "exports": {
@@ -11,6 +11,11 @@
   },
   "author": "Nextcloud GmbH and Nextcloud contributors",
   "license": "AGPL-3.0-or-later",
+  "files": [
+    "dist",
+    "AUTHORS.md",
+    "LICENSES"
+  ],
   "keywords": [
     "nextcloud"
   ],
