@@ -2,6 +2,16 @@
   "name": "@nextcloud/notify_push",
   "version": "1.4.0",
   "description": "A javascript client for notify_push events",
+  "keywords": [
+    "nextcloud"
+  ],
+  "homepage": "https://github.com/nextcloud-libraries/notify_push-client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextcloud-libraries/notify_push-client.git"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": "Nextcloud GmbH and Nextcloud contributors",
   "type": "module",
   "exports": {
     ".": {
@@ -9,26 +19,20 @@
       "import": "./dist/index.js"
     }
   },
-  "author": "Nextcloud GmbH and Nextcloud contributors",
-  "license": "AGPL-3.0-or-later",
   "files": [
     "dist",
     "AUTHORS.md",
     "LICENSES"
   ],
-  "keywords": [
-    "nextcloud"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/icewind1991/notify_push-client.git"
-  },
   "scripts": {
     "build": "tsc",
     "build:doc": "typedoc --out dist/doc lib && touch dist/doc/.nojekyll",
     "check-types": "tsc",
     "dev": "babel ./lib --out-dir dist --extensions '.ts,.tsx' --watch"
   },
+  "browserslist": [
+    "extends @nextcloud/browserslist-config"
+  ],
   "dependencies": {
     "@nextcloud/axios": "^2.6.0",
     "@nextcloud/capabilities": "^1.2.1",
@@ -39,14 +43,13 @@
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
   },
-  "browserslist": [
-    "extends @nextcloud/browserslist-config"
-  ],
   "devEngines": {
-    "packageManager": {
-      "name": "npm",
-      "version": "^11.3"
-    },
+    "packageManager": [
+      {
+        "name": "npm",
+        "version": "^11.3"
+      }
+    ],
     "runtime": {
       "name": "node",
       "version": "^24"
